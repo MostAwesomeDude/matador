@@ -10,6 +10,11 @@ let
     # The NixOS release to be compatible with for stateful data such as databases.
     system.stateVersion = "15.09";
 
+    # Anti-bufferbloat.
+    boot.kernel.sysctl = {
+      "net.core.default_qdisc" = "fq_codel";
+    };
+
     environment.systemPackages = with pkgs; [
       # Essential shell tools
       vimNox
