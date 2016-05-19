@@ -1,6 +1,7 @@
 let
   # NixOS description for Tahoe storage nodes.
-  storage = nodeName: { config, pkgs, ... }:
+  storage = { nodeName, enableHelper ? false }:
+            { config, pkgs, ... }:
   let
     tahoeWebPort = 3456;
     tahoeStoragePort = 3457;
@@ -60,6 +61,7 @@ let
           enable = true;
           reservedSpace = "256M";
         };
+        helper.enable = enableHelper;
       };
     };
   };
@@ -72,12 +74,12 @@ in
 
   # Eight servers, with 3/7/10 shares, for N+1 write availability and 3N+1
   # read availability.
-  alpha = storage "alpha";
-  bravo = storage "bravo";
-  charlie = storage "charlie";
-  delta = storage "delta";
-  echo = storage "echo";
-  foxtrot = storage "foxtrot";
-  golf = storage "golf";
-  hotel = storage "hotel";
+  alpha = storage { nodeName = "alpha"; enableHelper = true; };
+  bravo = storage { nodeName = "bravo"; };
+  charlie = storage { nodeName = "charlie"; };
+  delta = storage { nodeName = "delta"; };
+  echo = storage { nodeName = "echo"; };
+  foxtrot = storage { nodeName = "foxtrot"; };
+  golf = storage { nodeName = "golf"; };
+  hotel = storage { nodeName = "hotel"; };
 }
