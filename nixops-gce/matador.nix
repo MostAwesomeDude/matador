@@ -91,12 +91,12 @@ let
       iptables
       # Development
       # git
-      nix-repl
+      # nix-repl
     ];
 
     networking.firewall = {
       allowPing = true;
-      allowedTCPPorts = [ 80 ];
+      allowedTCPPorts = [ 80 3000 ];
     };
   
     # System services.
@@ -117,6 +117,7 @@ let
 
         hydraURL = "http://hydra.matador.cloud/";
         notificationSender = "hydra@matador.cloud";
+        # Hydra appears to not actually respect this setting.
         port = 80;
       };
     };

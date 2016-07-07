@@ -6,13 +6,21 @@ let
     accessKey = "/home/you/matador/pkey.pem";
   };
   gce = { staticIP, region }: { resources, ... }: {
-    networking.firewall.allowedTCPPorts = [ tahoeStoragePort ];
-
     deployment.targetEnv = "gce";
     deployment.gce = creds // {
       inherit region;
       tags = [ "public-tahoe" ];
       network = resources.gceNetworks.net-tahoe;
+      ipAddress = resources.gceStaticIPs."ip-${staticIP}";
+    };
+  };
+
+  gce-hydra = { staticIP, region }: { resources, ... }: {
+    deployment.targetEnv = "gce";
+    deployment.gce = creds // {
+      inherit region;
+      tags = [ "public-hydra" ];
+      network = resources.gceNetworks.net-hydra;
       ipAddress = resources.gceStaticIPs."ip-${staticIP}";
     };
   };
@@ -24,6 +32,17 @@ in
       allow-tahoe = {
         targetTags = [ "public-tahoe" ];
         allowed.tcp = [ tahoeStoragePort ];
+      };
+      allow-ping.allowed.icmp = null;
+    };
+  };
+
+  resources.gceNetworks.net-hydra = creds // {
+    addressRange = "192.168.42.0/24";
+    firewall = {
+      allow-tahoe = {
+        targetTags = [ "public-hydra" ];
+        allowed.tcp = [ 80 3000 ];
       };
       allow-ping.allowed.icmp = null;
     };
@@ -53,5 +72,5 @@ in
   hotel = gce { staticIP = "hotel"; region = "us-east1-b"; };
   india = gce { staticIP = "india"; region = "us-east1-b"; };
 
-  zulu = gce { staticIP = "zulu"; region = "us-east1-b"; };
+  zulu = gce-hydra { staticIP = "zulu"; region = "us-east1-b"; };
 }
