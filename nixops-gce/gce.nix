@@ -38,6 +38,9 @@ in
   resources.gceStaticIPs.ip-golf = creds // { region = "us-central1"; };
 
   resources.gceStaticIPs.ip-hotel = creds // { region = "us-east1"; };
+  resources.gceStaticIPs.ip-india = creds // { region = "us-east1"; };
+
+  resources.gceStaticIPs.ip-zulu = creds // { region = "us-east1"; };
 
   alpha = gce { staticIP = "alpha"; region = "us-central1-a"; };
   bravo = gce { staticIP = "bravo"; region = "us-central1-a"; };
@@ -48,4 +51,7 @@ in
   golf = gce { staticIP = "golf"; region = "us-central1-a"; };
 
   hotel = gce { staticIP = "hotel"; region = "us-east1-b"; };
+  india = gce { staticIP = "india"; region = "us-east1-b"; };
+
+  zulu = gce { staticIP = "zulu"; region = "us-east1-b"; };
 }

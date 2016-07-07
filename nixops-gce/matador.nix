@@ -65,6 +65,62 @@ let
       };
     };
   };
+  # A Hydra server.
+  hydra = { config, pkgs, ... }:
+  let
+    ipAddress = config.deployment.gce.ipAddress.publicIPv4;
+  in
+  {
+    # The NixOS release to be compatible with for stateful data such as databases.
+    system.stateVersion = "15.09";
+
+    # Anti-bufferbloat.
+    boot.kernel.sysctl = {
+      "net.core.default_qdisc" = "fq_codel";
+    };
+
+    environment.systemPackages = with pkgs; [
+      # Essential shell tools
+      vimNox
+      tmux
+      # Administration
+      eventstat
+      htop
+      iftop
+      iotop
+      iptables
+      # Development
+      # git
+      nix-repl
+    ];
+
+    networking.firewall = {
+      allowPing = true;
+      allowedTCPPorts = [ 80 ];
+    };
+  
+    # System services.
+    services = {
+      # Stop annoying SSH attempts, part one. This is pretty much essential
+      # for GCE, as otherwise your machines will spend lots of precious CPU
+      # time and network traffic responding to SSH attempts from scanners.
+      fail2ban.enable = true;
+
+      # Stop annoying SSH attempts, part two. The attackers seem to almost
+      # always use password-interactive authentication, but nixops uses keys;
+      # we can cut them off easily.
+      openssh.passwordAuthentication = false;
+
+      # Hydra configuration.
+      hydra = {
+        enable = true;
+
+        hydraURL = "http://hydra.matador.cloud/";
+        notificationSender = "hydra@matador.cloud";
+        port = 80;
+      };
+    };
+  };
 in
 {
   network = {
@@ -82,4 +138,7 @@ in
   foxtrot = storage { nodeName = "foxtrot"; };
   golf = storage { nodeName = "golf"; };
   hotel = storage { nodeName = "hotel"; };
+  india = storage { nodeName = "india"; };
+
+  zulu = hydra;
 }
