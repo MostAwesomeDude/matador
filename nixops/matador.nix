@@ -116,6 +116,7 @@ let
         enable = true;
 
         hydraURL = "http://hydra.matador.cloud/";
+        logo = ./matador.svg;
         notificationSender = "hydra@matador.cloud";
         # Hydra appears to not actually respect this setting.
         port = 80;
