@@ -98,7 +98,7 @@ let
       allowPing = true;
       allowedTCPPorts = [ 80 3000 ];
     };
-  
+
     # System services.
     services = {
       # Stop annoying SSH attempts, part one. This is pretty much essential

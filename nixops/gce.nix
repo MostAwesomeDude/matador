@@ -22,6 +22,7 @@ let
       tags = [ "public-hydra" ];
       network = resources.gceNetworks.net-hydra;
       ipAddress = resources.gceStaticIPs."ip-${staticIP}";
+      instanceType = "n1-highmem-2";
     };
   };
 in
